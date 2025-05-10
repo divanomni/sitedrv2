@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitMaster - Твой персональный фитнес-тренер</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap');
+        
+        :root {
+            --primary: #FF6B35;
+            --secondary: #F7C59F;
+            --dark: #1A1A1D;
+            --light: #F5F5F5;
+            --accent: #EF233C;
+            --gold: #FFD700;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            scroll-behavior: smooth;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .rotate-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .rotate-icon:hover {
+            transform: rotate(15deg);
+        }
+        
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .custom-checkbox:checked {
+            background-color: var(--primary);
+        }
+        
+        .custom-checkbox:checked::after {
+            content: '\2713';
+            font-size: 14px;
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .nutrition-wheel {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .wheel-section {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(50% 50%, 50% 0%, 100% 0%);
+            transform-origin: 50% 50%;
+        }
+        
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="relative">
+    <!-- Навигация -->
+    <nav class="bg-white shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-dumbbell text-2xl text-orange-500 mr-2"></i>
+                        <span class="text-xl font-bold text-gray-900">FitMaster</span>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-center space-x-4">
+                        <a href="#home" class="text-gray-900 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium transition">Главная</a>
+                        <a href="#features" class="text-gray-900 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium transition">Возможности</a>
+                        <a href="#stories" class="text-gray-900 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium transition">Истории</a>
+                        <a href="#calculator" class="text-gray-900 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium transition">Калькулятор</a>
+                        <a href="#reviews" class="text-gray-900 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium transition">Отзывы</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button id="loginBtn" class="text-gray-900 hover:text-orange-500 px-3 py-1 rounded-md text-sm font-medium transition">Вход</button>
+                    <button id="registerBtn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1 rounded-md text-sm font-medium transition">Регистрация</button>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-900 hover:text-orange-500 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Мобильное меню -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="text-gray-900 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">Главная</a>
+                <a href="#features" class="text-gray-900 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">Возможности</a>
+                <a href="#stories" class="text-gray-900 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">Истории</a>
+                <a href="#calculator" class="text-gray-900 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">Калькулятор</a>
+                <a href="#reviews" class="text-gray-900 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">Отзывы</a>
+                <div class="pt-2 border-t border-gray-200">
+                    <button id="mobileLoginBtn" class="w-full text-left text-gray-900 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">Вход</button>
+                    <button id="mobileRegisterBtn" class="w-full text-left bg-orange-500 hover:bg-orange-600 text-white block px-3 py-2 rounded-md text-base font-medium">Регистрация</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Герой секция -->
+    <section id="home" class="pt-24 pb-16 md:pt-32 md:pb-24 gradient-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">Преврати свое тело <span class="text-yellow-300">в шедевр</span></h1>
+                    <p class="text-xl md:text-2xl mb-8">Твой персональный фитнес-тренер всегда с тобой. Начни свой путь к идеальному телу прямо сейчас!</p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button id="heroRegisterBtn" class="bg-white text-orange-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">Начать бесплатно</button>
+                        <button id="heroLearnMoreBtn" class="border-2 border-white text-white hover:bg-white hover:text-orange-600 font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">Узнать больше</button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Фитнес" class="rounded-xl shadow-2xl w-full max-w-md floating">
+                        <div class="absolute -bottom-6 -left-6 bg-yellow-400 text-gray-900 p-4 rounded-lg shadow-lg rotate-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-fire text-2xl mr-2"></i>
+                                <span class="font-bold">500+ тренировок</span>
+                            </div>
+                        </div>
+                        <div class="absolute -top-6 -right-6 bg-white text-orange-600 p-4 rounded-lg shadow-lg -rotate-6">
+                            <div class="flex items-center">
+                                <i class="fas fa-users text-2xl mr-2"></i>
+                                <span class="font-bold">50,000+ пользователей</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Мотивационные цитаты -->
+    <section class="py-12 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Мотивация для твоего пути</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Вдохновляющие мысли, которые помогут тебе не сдаваться</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition">
+                    <div class="text-orange-500 text-4xl mb-4">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="text-gray-700 mb-4 italic">"Тело достигает того, во что верит разум."</p>
+                    <div class="flex items-center">
+                        <div class="bg-orange-500 w-10 h-10 rounded-full flex items-center justify-center text-white">
+                            <span>J</span>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-900">Джим Рон</p>
+                            <p class="text-xs text-gray-500">Мотивационный спикер</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition">
+                    <div class="text-orange-500 text-4xl mb-4">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="text-gray-700 mb-4 italic">"Ты никогда не пожалеешь о тренировке, но всегда пожалеешь о ее пропуске."</p>
+                    <div class="flex items-center">
+                        <div class="bg-orange-500 w-10 h-10 rounded-full flex items-center justify-center text-white">
+                            <span>U</span>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-900">Неизвестный</p>
+                            <p class="text-xs text-gray-500">Фитнес-энтузиаст</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition">
+                    <div class="text-orange-500 text-4xl mb-4">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    <p class="text-gray-700 mb-4 italic">"Сила не приходит от физических возможностей. Она исходит от несгибаемой воли."</p>
+                    <div class="flex items-center">
+                        <div class="bg-orange-500 w-10 h-10 rounded-full flex items-center justify-center text-white">
+                            <span>G</span>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-900">Махатма Ганди</p>
+                            <p class="text-xs text-gray-500">Политический деятель</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- О FitMaster -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0 md:pr-10">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">Что такое <span class="text-orange-500">FitMaster</span>?</h2>
+                    <p class="text-lg text-gray-600 mb-6">FitMaster — это инновационная онлайн-платформа, которая превращает твой смартфон в персонального фитнес-тренера. Мы объединяем экспертные знания, современные технологии и индивидуальный подход, чтобы помочь тебе достичь своих целей.</p>
+                    <p class="text-lg text-gray-600 mb-6">Неважно, только начинаешь свой фитнес-путь или уже опытный атлет — у нас есть решения, которые помогут тебе выйти на новый уровень.</p>
+                    <div class="flex flex-wrap gap-3">
+                        <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">Персонализация</span>
+                        <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">Экспертные программы</span>
+                        <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">Трекер прогресса</span>
+                        <span class="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">Сообщество</span>
+                    </div>
+                </div>
+                <div class="md:w-1/2">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-4.0.3&ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Приложение FitMaster" class="rounded-xl shadow-lg w-full">
+                        <div class="absolute -bottom-6 -right-6 bg-orange-500 text-white p-4 rounded-lg shadow-lg rotate-3">
+                            <div class="flex items-center">
+                                <i class="fas fa-mobile-alt text-2xl mr-2"></i>
+                                <span class="font-bold">Доступно 24/7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Основные функции -->
+    <section id="features" class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Наши <span class="text-orange-500">возможности</span></h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Все, что нужно для твоего фитнес-пути, в одном месте</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
+                    <div class="text-orange-500 text-4xl mb-6">
+                        <i class="fas fa-dumbbell rotate-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Персональные тренировки</h3>
+                    <p class="text-gray-600 mb-4">Программы, адаптированные под твой уровень подготовки, цели и доступное оборудование. Тренируйся где угодно и когда угодно.</p>
+                    <button class="text-orange-500 font-medium flex items-center">
+                        Узнать больше <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
+                    <div class="text-orange-500 text-4xl mb-6">
+                        <i class="fas fa-utensils rotate-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Питание и диеты</h3>
+                    <p class="text-gray-600 mb-4">Индивидуальные планы питания с учетом твоих предпочтений и целей. Рецепты, трекер калорий и макронутриентов.</p>
+                    <button class="text-orange-500 font-medium flex items-center">
+                        Узнать больше <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
+                    <div class="text-orange-500 text-4xl mb-6">
+                        <i class="fas fa-chart-line rotate-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Трекер прогресса</h3>
+                    <p class="text-gray-600 mb-4">Отслеживай свои результаты, анализируй статистику и получай рекомендации по улучшению показателей.</p>
+                    <button class="text-orange-500 font-medium flex items-center">
+                        Узнать больше <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
+                    <div class="text-orange-500 text-4xl mb-6">
+                        <i class="fas fa-video rotate-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Видео-уроки</h3>
+                    <p class="text-gray-600 mb-4">Более 500 профессиональных видео с детальными объяснениями техники выполнения упражнений.</p>
+                    <button class="text-orange-500 font-medium flex items-center">
+                        Узнать больше <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
+                    <div class="text-orange-500 text-4xl mb-6">
+                        <i class="fas fa-heartbeat rotate-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Здоровье и восстановление</h3>
+                    <p class="text-gray-600 mb-4">Программы растяжки, медитации и восстановления после тренировок. Заботься о своем теле комплексно.</p>
+                    <button class="text-orange-500 font-medium flex items-center">
+                        Узнать больше <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-xl transition transform hover:-translate-y-2">
+                    <div class="text-orange-500 text-4xl mb-6">
+                        <i class="fas fa-users rotate-icon"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Сообщество</h3>
+                    <p class="text-gray-600 mb-4">Общайся с единомышленниками, участвуй в челленджах, находи поддержку и мотивацию.</p>
+                    <button class="text-orange-500 font-medium flex items-center">
+                        Узнать больше <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Истории успеха -->
+    <section id="stories" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Истории <span class="text-orange-500">преображений</span></h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Реальные люди, реальные результаты. Вдохновляйся и действуй!</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-100 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="История 1" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="text-xl font-bold">Алексей, 32 года</h3>
+                            <p class="text-sm">-15 кг за 3 месяца</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-4">"FitMaster полностью изменил мой подход к тренировкам. Благодаря персонализированной программе и системе напоминаний я смог выработать привычку заниматься регулярно."</p>
+                        <div class="flex items-center">
+                            <div class="flex-1">
+                                <div class="flex items-center">
+                                    <i class="fas fa-fire text-orange-500 mr-1"></i>
+                                    <span class="text-sm text-gray-600">500+ тренировок</span>
+                                </div>
+                            </div>
+                            <button class="text-orange-500 font-medium text-sm">Читать полностью</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-100 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1549060279-7e168fcee0c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="История 2" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="text-xl font-bold">Екатерина, 28 лет</h3>
+                            <p class="text-sm">+8 кг мышц за год</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-4">"Я всегда была худой и не могла набрать массу. FitMaster помог мне не только с тренировками, но и с питанием. Теперь я горжусь своим телом!"</p>
+                        <div class="flex items-center">
+                            <div class="flex-1">
+                                <div class="flex items-center">
+                                    <i class="fas fa-utensils text-orange-500 mr-1"></i>
+                                    <span class="text-sm text-gray-600">300+ рецептов</span>
+                                </div>
+                            </div>
+                            <button class="text-orange-500 font-medium text-sm">Читать полностью</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-100 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1571019614242-c95595945cef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="История 3" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                        <div class="absolute bottom-4 left-4 text-white">
+                            <h3 class="text-xl font-bold">Дмитрий, 45 лет</h3>
+                            <p class="text-sm">Нормализация давления</p>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <p class="text-gray-700 mb-4">"После 40 лет начались проблемы со здоровьем. Благодаря программе восстановления и щадящим тренировкам в FitMaster я чувствую себя на 10 лет моложе."</p>
+                        <div class="flex items-center">
+                            <div class="flex-1">
+                                <div class="flex items-center">
+                                    <i class="fas fa-heartbeat text-orange-500 mr-1"></i>
+                                    <span class="text-sm text-gray-600">Здоровье</span>
+                                </div>
+                            </div>
+                            <button class="text-orange-500 font-medium text-sm">Читать полностью</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <button class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">
+                    Больше историй
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Калькулятор калорий -->
+    <section id="calculator" class="py-16 bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Креативный <span class="text-orange-500">калькулятор</span> калорий</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Узнай, сколько энергии тебе нужно для достижения твоих целей</p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="flex flex-col lg:flex-row">
+                    <div class="lg:w-1/2 p-8">
+                        <div class="mb-8">
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">Твои параметры</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Пол</label>
+                                    <div class="flex space-x-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" class="form-radio text-orange-500" name="gender" value="male" checked>
+                                            <span class="ml-2">Мужской</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" class="form-radio text-orange-500" name="gender" value="female">
+                                            <span class="ml-2">Женский</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Возраст</label>
+                                    <input type="number" id="age" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" placeholder="Лет" min="10" max="100">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Рост</label>
+                                    <div class="flex">
+                                        <input type="number" id="height" class="w-full px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-orange-500 focus:border-orange-500" placeholder="см" min="100" max="250">
+                                        <span class="inline-flex items-center px-3 bg-gray-100 text-gray-700 border border-l-0 border-gray-300 rounded-r-lg">см</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Вес</label>
+                                    <div class="flex">
+                                        <input type="number" id="weight" class="w-full px-4 py-2 border border-gray-300 rounded-l-lg focus:ring-orange-500 focus:border-orange-500" placeholder="кг" min="30" max="200">
+                                        <span class="inline-flex items-center px-3 bg-gray-100 text-gray-700 border border-l-0 border-gray-300 rounded-r-lg">кг</span>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Уровень активности</label>
+                                    <select id="activity" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+                                        <option value="1.2">Сидячий образ жизни</option>
+                                        <option value="1.375">Легкая активность (1-3 тренировки в неделю)</option>
+                                        <option value="1.55" selected>Умеренная активность (3-5 тренировок)</option>
+                                        <option value="1.725">Высокая активность (6-7 тренировок)</option>
+                                        <option value="1.9">Экстремальная активность (2+ тренировки в день)</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Цель</label>
+                                    <select id="goal" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+                                        <option value="-500">Похудение</option>
+                                        <option value="0" selected>Поддержание веса</option>
+                                        <option value="500">Набор массы</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center">
+                            <button id="calculateBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">
+                                Рассчитать
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:w-1/2 bg-orange-50 p-8 flex flex-col items-center justify-center">
+                        <div class="text-center mb-8">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Твоя дневная норма</h3>
+                            <p class="text-gray-600">Результаты появятся после расчета</p>
+                        </div>
+                        
+                        <div class="nutrition-wheel mb-8">
+                            <canvas id="caloriesChart" width="250" height="250"></canvas>
+                        </div>
+                        
+                        <div id="results" class="hidden w-full max-w-md">
+                            <div class="grid grid-cols-3 gap-4 text-center">
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <div class="text-orange-500 font-bold text-xl" id="maintenanceCalories">0</div>
+                                    <div class="text-gray-600 text-sm">Поддержание</div>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <div class="text-orange-500 font-bold text-xl" id="goalCalories">0</div>
+                                    <div class="text-gray-600 text-sm">Твоя цель</div>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <div class="text-orange-500 font-bold text-xl" id="protein">0г</div>
+                                    <div class="text-gray-600 text-sm">Белки</div>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <div class="text-orange-500 font-bold text-xl" id="carbs">0г</div>
+                                    <div class="text-gray-600 text-sm">Углеводы</div>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <div class="text-orange-500 font-bold text-xl" id="fat">0г</div>
+                                    <div class="text-gray-600 text-sm">Жиры</div>
+                                </div>
+                                <div class="bg-white p-4 rounded-lg shadow">
+                                    <div class="text-orange-500 font-bold text-xl" id="water">0л</div>
+                                    <div class="text-gray-600 text-sm">Вода</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6 text-center">
+                                <button id="savePlanBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg text-sm transition transform hover:scale-105">
+                                    Сохранить план
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Отзывы -->
+    <section id="reviews" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Отзывы <span class="text-orange-500">пользователей</span></h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Что говорят те, кто уже попробовал FitMaster</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-xl mr-4">А</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">Анна</h4>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Использую FitMaster уже полгода. Никогда не думала, что смогу так полюбить тренировки! Программа подстраивается под мой график, а рецепты просто бомба."</p>
+                    <div class="text-sm text-gray-500">2 мая 2025</div>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-xl mr-4">М</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">Максим</h4>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star-half-alt text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Отличное приложение для тех, кто хочет привести себя в форму. Особенно нравятся видеоуроки - все показано очень подробно. Единственное - хотелось бы больше программ для дома."</p>
+                    <div class="text-sm text-gray-500">28 апреля 2025</div>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-xl mr-4">О</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">Ольга</h4>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="far fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"После рождения ребенка долго не могла прийти в форму. FitMaster помог мне постепенно вернуть былую физическую форму без стресса для организма. Спасибо!"</p>
+                    <div class="text-sm text-gray-500">15 марта 2025</div>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-xl mr-4">И</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">Иван</h4>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Как тренер могу сказать, что приложение действительно профессиональное. Использую его для своих клиентов как дополнение к нашим занятиям. Особенно нравится система трекинга прогресса."</p>
+                    <div class="text-sm text-gray-500">2 марта 2025</div>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-xl mr-4">Е</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">Елена</h4>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="far fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Хорошее приложение, но иногда бывают технические проблемы с синхронизацией данных. В остальном - отличный помощник для домашних тренировок."</p>
+                    <div class="text-sm text-gray-500">20 февраля 2025</div>
+                </div>
+                
+                <div class="bg-gray-50 p-6 rounded-xl shadow-md">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-xl mr-4">Д</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">Денис</h4>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"FitMaster - это лучшее, что случилось с моим телом за последние годы! За 4 месяца я полностью преобразился. Теперь рекомендую всем друзьям."</p>
+                    <div class="text-sm text-gray-500">5 февраля 2025</div>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <button class="border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">
+                    Оставить отзыв
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA секция -->
+    <section class="py-16 gradient-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Готов изменить свою жизнь <span class="text-yellow-300">уже сегодня</span>?</h2>
+            <p class="text-xl mb-8 max-w-3xl mx-auto">Присоединяйся к сообществу FitMaster и получи доступ к персональному фитнес-тренеру в своем кармане!</p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button id="ctaRegisterBtn" class="bg-white text-orange-600 hover:bg-gray-100 font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">Начать бесплатно</button>
+                <button id="ctaDemoBtn" class="border-2 border-white text-white hover:bg-white hover:text-orange-600 font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">Демо-тур</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-dumbbell text-2xl text-orange-500 mr-2"></i>
+                        <span class="text-xl font-bold">FitMaster</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Твой персональный фитнес-тренер всегда с тобой.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">О FitMaster</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition">О нас</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition">Команда</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition">Карьера</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition">Блог</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Помощь</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-orange-500 transition">Поддержка</a></li>
+                        <li><button id="privacyBtn" class="text-gray-400 hover:text-orange-500 transition">Политика конфиденциальности</button></li>
+                        <li><button id="termsBtn" class="text-gray-400 hover:text-orange-500 transition">Условия использования</button></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Контакты</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-center">
+                            <i class="fas fa-map-marker-alt text-orange-500 mr-2"></i>
+                            <span class="text-gray-400">Москва, ул. Фитнесная, 15</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone text-orange-500 mr-2"></i>
+                            <span class="text-gray-400">+7 (123) 456-7890</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope text-orange-500 mr-2"></i>
+                            <span class="text-gray-400">info@fitmaster.ru</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 FitMaster. Все права защищены.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-orange-500 transition">Правовая информация</a>
+                    <a href="#" class="text-gray-400 hover:text-orange-500 transition">Карта сайта</a>
+                    <button id="feedbackBtn" class="text-gray-400 hover:text-orange-500 transition">Обратная связь</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно входа -->
+    <div id="loginModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
+        <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full transform translate-y-10">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900">Вход в аккаунт</h3>
+                    <button id="closeLoginModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label for="loginEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="loginEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required>
+                    </div>
+                    
+                    <div>
+                        <label for="loginPassword" class="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
+                        <input type="password" id="loginPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="rememberMe" class="custom-checkbox">
+                            <label for="rememberMe" class="ml-2 text-sm text-gray-700">Запомнить меня</label>
+                        </div>
+                        <a href="#" class="text-sm text-orange-500 hover:text-orange-600">Забыли пароль?</a>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition">
+                        Войти
+                    </button>
+                </form>
+                
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-600">Еще нет аккаунта? <button id="switchToRegister" class="text-orange-500 hover:text-orange-600 font-medium">Зарегистрироваться</button></p>
+                </div>
+                
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <p class="text-xs text-gray-500">Нажимая "Войти", вы соглашаетесь с нашими <button class="text-orange-500 hover:text-orange-600">Условиями использования</button> и <button class="text-orange-500 hover:text-orange-600">Политикой конфиденциальности</button>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно регистрации -->
+    <div id="registerModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
+        <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full transform translate-y-10">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900">Создать аккаунт</h3>
+                    <button id="closeRegisterModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="registerForm" class="space-y-4">
+                    <div>
+                        <label for="registerName" class="block text-sm font-medium text-gray-700 mb-1">Имя</label>
+                        <input type="text" id="registerName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required>
+                    </div>
+                    
+                    <div>
+                        <label for="registerEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="registerEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required>
+                    </div>
+                    
+                    <div>
+                        <label for="registerPassword" class="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
+                        <input type="password" id="registerPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required>
+                    </div>
+                    
+                    <div>
+                        <label for="registerConfirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Подтвердите пароль</label>
+                        <input type="password" id="registerConfirmPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="acceptTerms" class="custom-checkbox" required>
+                        <label for="acceptTerms" class="ml-2 text-sm text-gray-700">Я согласен с <button class="text-orange-500 hover:text-orange-600">Условиями использования</button> и <button class="text-orange-500 hover:text-orange-600">Политикой конфиденциальности</button></label>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition">
+                        Зарегистрироваться
+                    </button>
+                </form>
+                
+                <div class="mt-4 text-center">
+                    <p class="text-sm text-gray-600">Уже есть аккаунт? <button id="switchToLogin" class="text-orange-500 hover:text-orange-600 font-medium">Войти</button></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно успешной регистрации -->
+    <div id="successModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
+        <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full transform translate-y-10">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check text-green-500 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Регистрация завершена!</h3>
+                <p class="text-gray-600 mb-6">Добро пожаловать в сообщество FitMaster. Теперь у тебя есть доступ ко всем возможностям платформы.</p>
+                <button id="closeSuccessModal" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg transition">
+                    Начать путь
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно политики конфиденциальности -->
+    <div id="privacyModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible overflow-y-auto">
+        <div class="modal-content bg-white rounded-lg shadow-xl max-w-4xl w-full transform translate-y-10 my-8 max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4 sticky top-0 bg-white py-2">
+                    <h3 class="text-2xl font-bold text-gray-900">Политика конфиденциальности</h3>
+                    <button id="closePrivacyModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="prose max-w-none text-gray-700">
+                    <h4 class="text-lg font-bold mt-4">1. Общие положения</h4>
+                    <p>1.1. Настоящая Политика конфиденциальности регулирует порядок обработки и использования персональных данных пользователей сервиса FitMaster (далее — "Сервис").</p>
+                    <p>1.2. Используя Сервис, Пользователь выражает свое согласие с условиями настоящей Политики конфиденциальности.</p>
+                    
+                    <h4 class="text-lg font-bold mt-6">2. Какие данные мы собираем</h4>
+                    <p>2.1. При регистрации на Сайте мы запрашиваем у Пользователя следующую информацию:</p>
+                    <ul class="list-disc pl-5">
+                        <li>Имя</li>
+                        <li>Адрес электронной почты (e-mail)</li>
+                        <li>Пароль</li>
+                    </ul>
+                    <p>2.2. В процессе использования Сервиса мы также можем собирать:</p>
+                    <ul class="list-disc pl-5">
+                        <li>Данные о физической активности</li>
+                        <li>Параметры тела (рост, вес, возраст)</li>
+                        <li>Информацию о целях в фитнесе</li>
+                        <li>Данные о тренировках и питании</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-bold mt-6">3. Как мы используем данные</h4>
+                    <p>3.1. Персональные данные Пользователей используются для:</p>
+                    <ul class="list-disc pl-5">
+                        <li>Предоставления услуг Сервиса</li>
+                        <li>Персонализации тренировочных программ</li>
+                        <li>Обратной связи с Пользователем</li>
+                        <li>Улучшения качества Сервиса</li>
+                    </ul>
+                    
+                    <h4 class="text-lg font-bold mt-6">4. Защита данных</h4>
+                    <p>4.1. Мы принимаем все необходимые меры для защиты персональных данных Пользователей от несанкционированного доступа, изменения, раскрытия или уничтожения.</p>
+                    
+                    <h4 class="text-lg font-bold mt-6">5. Передача данных третьим лицам</h4>
+                    <p>5.1. Мы не передаем персональные данные Пользователей третьим лицам, за исключением случаев, предусмотренных законодательством.</p>
+                    
+                    <h4 class="text-lg font-bold mt-6">6. Изменения в Политике конфиденциальности</h4>
+                    <p>6.1. Мы оставляем за собой право вносить изменения в настоящую Политику конфиденциальности. При внесении изменений в актуальной редакции указывается дата последнего обновления.</p>
+                    
+                    <h4 class="text-lg font-bold mt-6">7. Контакты</h4>
+                    <p>7.1. Все предложения или вопросы по настоящей Политике конфиденциальности следует сообщать в службу поддержки по адресу: privacy@fitmaster.ru</p>
+                </div>
+                
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="acceptPrivacy" class="custom-checkbox">
+                        <label for="acceptPrivacy" class="ml-2 text-gray-700">Я прочитал и согласен с Политикой конфиденциальности</label>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                    <button id="acceptPrivacyBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg transition">
+                        Принимаю
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно обратной связи -->
+    <div id="feedbackModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
+        <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full transform translate-y-10">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900">Обратная связь</h3>
+                    <button id="closeFeedbackModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <form id="feedbackForm" class="space-y-4">
+                    <div>
+                        <label for="feedbackName" class="block text-sm font-medium text-gray-700 mb-1">Ваше имя</label>
+                        <input type="text" id="feedbackName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+                    </div>
+                    
+                    <div>
+                        <label for="feedbackEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="feedbackEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required>
+                    </div>
+                    
+                    <div>
+                        <label for="feedbackSubject" class="block text-sm font-medium text-gray-700 mb-1">Тема</label>
+                        <select id="feedbackSubject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+                            <option value="support">Техническая поддержка</option>
+                            <option value="suggestion">Предложение по улучшению</option>
+                            <option value="partnership">Сотрудничество</option>
+                            <option value="other">Другое</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="feedbackMessage" class="block text-sm font-medium text-gray-700 mb-1">Сообщение</label>
+                        <textarea id="feedbackMessage" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition">
+                        Отправить
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно успешной отправки обратной связи -->
+    <div id="feedbackSuccessModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
+        <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full transform translate-y-10">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check text-green-500 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Сообщение отправлено!</h3>
+                <p class="text-gray-600 mb-6">Спасибо за ваше обращение. Мы рассмотрим его в ближайшее время и обязательно ответим вам.</p>
+                <button id="closeFeedbackSuccessModal" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg transition">
+                    Закрыть
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно демо-тура -->
+    <div id="demoModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
+        <div class="modal-content bg-white rounded-lg shadow-xl max-w-4xl w-full transform translate-y-10">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-gray-900">Демо-тур по FitMaster</h3>
+                    <button id="closeDemoModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="bg-gray-100 rounded-xl p-4 mb-6">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white mr-3">
+                                    <i class="fas fa-dumbbell"></i>
+                                </div>
+                                <h4 class="font-bold text-lg">Тренировки</h4>
+                            </div>
+                            <p class="text-gray-600">Доступ к более чем 500 тренировкам разного уровня сложности. Персональные программы, адаптированные под твои цели.</p>
+                        </div>
+                        
+                        <div class="bg-gray-100 rounded-xl p-4 mb-6">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white mr-3">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <h4 class="font-bold text-lg">Питание</h4>
+                            </div>
+                            <p class="text-gray-600">Индивидуальные планы питания с учетом твоих предпочтений. Трекер калорий и макронутриентов.</p>
+                        </div>
+                        
+                        <div class="bg-gray-100 rounded-xl p-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white mr-3">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h4 class="font-bold text-lg">Прогресс</h4>
+                            </div>
+                            <p class="text-gray-600">Отслеживай свои результаты, анализируй статистику и получай рекомендации по улучшению показателей.</p>
+                        </div>
+                   
+</html>
