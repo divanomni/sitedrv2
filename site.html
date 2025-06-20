@@ -120,10 +120,41 @@
         .hidden {
             display: none;
         }
+        
+        #userProfile {
+            display: none;
+        }
+        
+        /* анимации для калькулятора */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* анимация кнопки расчета */
+        #calculateBtn {
+            transition: all 0.3s ease;
+        }
+        
+        #calculateBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(239, 35, 60, 0.3);
+        }
+        
+        /* анимация результатов */
+        #results {
+            transition: all 0.6s ease-out;
+        }
     </style>
 </head>
 <body class="relative">
-    <!-- Навигация -->
+    <!-- навигация -->
     <nav class="bg-white shadow-lg fixed w-full z-50">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center h-16">
@@ -142,9 +173,13 @@
                         <a href="#reviews" class="text-gray-900 hover:text-orange-500 px-3 py-2 rounded-md text-sm font-medium transition">Отзывы</a>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2">
+                <div class="flex items-center space-x-4" id="authButtons">
                     <button id="loginBtn" class="text-gray-900 hover:text-orange-500 px-3 py-1 rounded-md text-sm font-medium transition">Вход</button>
                     <button id="registerBtn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-1 rounded-md text-sm font-medium transition">Регистрация</button>
+                </div>
+                <div id="userProfile" class="hidden items-center space-x-4">
+                    <span class="font-medium" id="userName"></span>
+                    <button id="logoutBtn" class="text-gray-900 hover:text-orange-500 px-3 py-1 rounded-md text-sm font-medium transition">Выйти</button>
                 </div>
                 <div class="md:hidden">
                     <button id="mobile-menu-button" class="text-gray-900 hover:text-orange-500 focus:outline-none">
@@ -154,7 +189,7 @@
             </div>
         </div>
         
-        <!-- Мобильное меню -->
+        <!-- моб меню -->
         <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                 <a href="#home" class="text-gray-900 hover:text-orange-500 block px-3 py-2 rounded-md text-base font-medium">Главная</a>
@@ -170,7 +205,7 @@
         </div>
     </nav>
 
-    <!-- Герой секция -->
+    <!-- главхеро секция -->
     <section id="home" class="pt-24 pb-16 md:pt-32 md:pb-24 gradient-bg text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row items-center">
@@ -203,7 +238,7 @@
         </div>
     </section>
 
-    <!-- Мотивационные цитаты -->
+    <!-- мотивационные цитаты -->
     <section class="py-12 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
@@ -238,7 +273,7 @@
                             <span>U</span>
                         </div>
                         <div class="ml-3">
-                            <p class="text-sm font-medium text-gray-900">Неизвестный</p>
+                            <p class="text-sm font-medium text-gray-900">Амир Сабуилов</p>
                             <p class="text-xs text-gray-500">Фитнес-энтузиаст</p>
                         </div>
                     </div>
@@ -293,7 +328,7 @@
         </div>
     </section>
 
-    <!-- Основные функции -->
+    <!-- основные функции -->
     <section id="features" class="py-16 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
@@ -371,7 +406,7 @@
         </div>
     </section>
 
-    <!-- Истории успеха -->
+    <!-- истории успеха -->
     <section id="stories" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
@@ -458,7 +493,7 @@
         </div>
     </section>
 
-    <!-- Калькулятор калорий -->
+    <!-- калькулятор калорий -->
     <section id="calculator" class="py-16 bg-gray-100">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
@@ -468,7 +503,7 @@
             
             <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div class="flex flex-col lg:flex-row">
-                    <div class="lg:w-1/2 p-8">
+                    <div class="lg:w-1/2 p-8 animate-on-scroll">
                         <div class="mb-8">
                             <h3 class="text-xl font-bold text-gray-900 mb-4">Твои параметры</h3>
                             
@@ -531,13 +566,13 @@
                         </div>
                         
                         <div class="flex justify-center">
-                            <button id="calculateBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">
+                            <button id="calculateBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105 pulse-animation">
                                 Рассчитать
                             </button>
                         </div>
                     </div>
                     
-                    <div class="lg:w-1/2 bg-orange-50 p-8 flex flex-col items-center justify-center">
+                    <div class="lg:w-1/2 bg-orange-50 p-8 flex flex-col items-center justify-center animate-on-scroll">
                         <div class="text-center mb-8">
                             <h3 class="text-xl font-bold text-gray-900 mb-2">Твоя дневная норма</h3>
                             <p class="text-gray-600">Результаты появятся после расчета</p>
@@ -548,38 +583,44 @@
                         </div>
                         
                         <div id="results" class="hidden w-full max-w-md">
-                            <div class="grid grid-cols-3 gap-4 text-center">
-                                <div class="bg-white p-4 rounded-lg shadow">
-                                    <div class="text-orange-500 font-bold text-xl" id="maintenanceCalories">0</div>
-                                    <div class="text-gray-600 text-sm">Поддержание</div>
-                                </div>
-                                <div class="bg-white p-4 rounded-lg shadow">
-                                    <div class="text-orange-500 font-bold text-xl" id="goalCalories">0</div>
-                                    <div class="text-gray-600 text-sm">Твоя цель</div>
-                                </div>
-                                <div class="bg-white p-4 rounded-lg shadow">
-                                    <div class="text-orange-500 font-bold text-xl" id="protein">0г</div>
-                                    <div class="text-gray-600 text-sm">Белки</div>
-                                </div>
-                                <div class="bg-white p-4 rounded-lg shadow">
-                                    <div class="text-orange-500 font-bold text-xl" id="carbs">0г</div>
-                                    <div class="text-gray-600 text-sm">Углеводы</div>
-                                </div>
-                                <div class="bg-white p-4 rounded-lg shadow">
-                                    <div class="text-orange-500 font-bold text-xl" id="fat">0г</div>
-                                    <div class="text-gray-600 text-sm">Жиры</div>
-                                </div>
-                                <div class="bg-white p-4 rounded-lg shadow">
-                                    <div class="text-orange-500 font-bold text-xl" id="water">0л</div>
-                                    <div class="text-gray-600 text-sm">Вода</div>
+                            <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
+                                <h4 class="text-lg font-bold text-gray-900 mb-4 text-center">Рекомендации по питанию</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Калории для поддержания:</span>
+                                        <span class="text-orange-500 font-bold" id="maintenanceCalories">0 ккал</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Калории для цели:</span>
+                                        <span class="text-orange-500 font-bold" id="goalCalories">0 ккал</span>
+                                    </div>
+                                    <div class="border-t border-gray-200 my-2"></div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Белки:</span>
+                                        <span class="text-orange-500 font-bold" id="protein">0г</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Углеводы:</span>
+                                        <span class="text-orange-500 font-bold" id="carbs">0г</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Жиры:</span>
+                                        <span class="text-orange-500 font-bold" id="fat">0г</span>
+                                    </div>
+                                    <div class="border-t border-gray-200 my-2"></div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Рекомендуемая вода:</span>
+                                        <span class="text-orange-500 font-bold" id="water">0л</span>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <div class="mt-6 text-center">
-                                <button id="savePlanBtn" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg text-sm transition transform hover:scale-105">
-                                    Сохранить план
+                            <div class="text-center">
+                                <p class="text-sm text-gray-600 mb-4">Для сохранения результатов и доступа ко всем функциям требуется регистрация</p>
+                                <button onclick="document.getElementById('registerModal').classList.add('active')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg text-sm transition transform hover:scale-105">
+                                    Зарегистрироваться
                                 </button>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -587,7 +628,7 @@
         </div>
     </section>
 
-    <!-- Отзывы -->
+    <!-- отзывы -->
     <section id="reviews" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
@@ -725,7 +766,7 @@
         </div>
     </section>
 
-    <!-- Футер -->
+    <!-- футер -->
     <footer class="bg-gray-900 text-white py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -793,7 +834,7 @@
         </div>
     </footer>
 
-    <!-- Модальное окно входа -->
+    <!-- модальное окно входа (абандонед) -->
     <div id="loginModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
         <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full transform translate-y-10">
             <div class="p-6">
@@ -839,7 +880,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно регистрации -->
+    <!-- модальное окно регистрации -->
     <div id="registerModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
         <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full transform translate-y-10">
             <div class="p-6">
@@ -853,32 +894,46 @@
                 <form id="registerForm" class="space-y-4">
                     <div>
                         <label for="registerName" class="block text-sm font-medium text-gray-700 mb-1">Имя</label>
-                        <input type="text" id="registerName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required>
+                        <input type="text" id="registerName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required minlength="2">
+                        <p id="nameError" class="hidden text-red-500 text-xs mt-1">Имя должно содержать минимум 2 символа</p>
                     </div>
                     
                     <div>
                         <label for="registerEmail" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                         <input type="email" id="registerEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required>
+                        <p id="emailError" class="hidden text-red-500 text-xs mt-1">Пожалуйста, введите корректный email</p>
                     </div>
                     
                     <div>
                         <label for="registerPassword" class="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
-                        <input type="password" id="registerPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required>
+                        <input type="password" id="registerPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required minlength="6">
+                        <p id="passwordError" class="hidden text-red-500 text-xs mt-1">Пароль должен содержать минимум 6 символов</p>
+                        <p class="text-gray-500 text-xs mt-1">Используйте буквы, цифры и специальные символы</p>
                     </div>
                     
                     <div>
                         <label for="registerConfirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Подтвердите пароль</label>
                         <input type="password" id="registerConfirmPassword" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500" required>
+                        <p id="confirmPasswordError" class="hidden text-red-500 text-xs mt-1">Пароли не совпадают</p>
                     </div>
                     
-                    <div class="flex items-center">
-                        <input type="checkbox" id="acceptTerms" class="custom-checkbox" required>
-                        <label for="acceptTerms" class="ml-2 text-sm text-gray-700">Я согласен с <button class="text-orange-500 hover:text-orange-600">Условиями использования</button> и <button class="text-orange-500 hover:text-orange-600">Политикой конфиденциальности</button></label>
+                    <div class="flex items-start">
+                        <input type="checkbox" id="acceptTerms" class="custom-checkbox mt-1">
+                        <label for="acceptTerms" class="ml-2 text-sm text-gray-700">Я прочитал и согласен с 
+                            <button type="button" onclick="document.getElementById('termsModal').classList.add('active')" class="text-orange-500 hover:text-orange-600">Условиями использования</button> и 
+                            <button type="button" onclick="document.getElementById('privacyModal').classList.add('active')" class="text-orange-500 hover:text-orange-600">Политикой конфиденциальности</button>
+                        </label>
                     </div>
+                    <p id="termsError" class="text-red-500 text-sm hidden">Вы должны принять условия и политику конфиденциальности</p>
                     
-                    <button type="submit" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition">
-                        Зарегистрироваться
-                    </button>
+                    <div class="flex space-x-4">
+                        <button type="button" id="cancelRegister" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition">
+                            Отмена
+                        </button>
+                        <button type="submit" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition">
+                            Зарегистрироваться
+                        </button>
+                    </div>
                 </form>
                 
                 <div class="mt-4 text-center">
@@ -888,15 +943,15 @@
         </div>
     </div>
 
-    <!-- Модальное окно успешной регистрации -->
+    <!-- модальное окно конец пути -->
     <div id="successModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
         <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full transform translate-y-10">
             <div class="p-6 text-center">
                 <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-check text-green-500 text-2xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-2">Регистрация завершена!</h3>
-                <p class="text-gray-600 mb-6">Добро пожаловать в сообщество FitMaster. Теперь у тебя есть доступ ко всем возможностям платформы.</p>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Спасибо за интерес!</h3>
+                <p class="text-gray-600 mb-6">Вы проявили интерес к занятию физическими нагрузками, и FitMaster рад предоставить вам место в своем комьюнити.</p>
                 <button id="closeSuccessModal" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg transition">
                     Начать путь
                 </button>
@@ -904,7 +959,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно политики конфиденциальности -->
+    <!-- модальное окно политики конфиденциальности -->
     <div id="privacyModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible overflow-y-auto">
         <div class="modal-content bg-white rounded-lg shadow-xl max-w-4xl w-full transform translate-y-10 my-8 max-h-[90vh] overflow-y-auto">
             <div class="p-6">
@@ -973,7 +1028,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно обратной связи -->
+    <!-- модальное окно обратной связи (доделать) -->
     <div id="feedbackModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
         <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full transform translate-y-10">
             <div class="p-6">
@@ -1018,7 +1073,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно успешной отправки обратной связи -->
+    <!-- модальное окно успешной отправки обратной связи (додепать) -->
     <div id="feedbackSuccessModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
         <div class="modal-content bg-white rounded-lg shadow-xl max-w-md w-full transform translate-y-10">
             <div class="p-6 text-center">
@@ -1034,8 +1089,425 @@
         </div>
     </div>
 
-    <!-- Модальное окно демо-тура -->
+    <!-- модальное окно условий использования -->
+    <div id="termsModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible overflow-y-auto">
+        <div class="modal-content bg-white rounded-lg shadow-xl max-w-4xl w-full transform translate-y-10 my-8 max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4 sticky top-0 bg-white py-2">
+                    <h3 class="text-2xl font-bold text-gray-900">Условия использования</h3>
+                    <button onclick="document.getElementById('termsModal').classList.remove('active')" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="prose max-w-none text-gray-700">
+                    <h4 class="text-lg font-bold mt-4">1. Общие положения</h4>
+                    <p>1.1. Настоящие Условия использования регулируют порядок использования сервиса FitMaster (далее — "Сервис").</p>
+                    <p>1.2. Используя Сервис, Пользователь выражает свое согласие с настоящими Условиями.</p>
+                    
+                    <h4 class="text-lg font-bold mt-6">2. Права и обязанности</h4>
+                    <p>2.1. Пользователь обязан предоставлять достоверную информацию при регистрации.</p>
+                    <p>2.2. Запрещается передавать свои учетные данные третьим лицам.</p>
+                    
+                    <h4 class="text-lg font-bold mt-6">3. Ограничения ответственности</h4>
+                    <p>3.1. Сервис не несет ответственности за результаты тренировок Пользователя.</p>
+                    <p>3.2. Пользователь самостоятельно оценивает свои физические возможности.</p>
+                    
+                    <h4 class="text-lg font-bold mt-6">4. Изменения условий</h4>
+                    <p>4.1. Сервис оставляет за собой право изменять настоящие Условия.</p>
+                    
+                    <h4 class="text-lg font-bold mt-6">5. Контакты</h5>
+                    <p>5.1. Все вопросы направляйте на support@fitmaster.ru</p>
+                </div>
+                
+                <div class="mt-6 flex justify-end">
+                    <button onclick="document.getElementById('termsModal').classList.remove('active')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded-lg transition">
+                        Закрыть
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- модальное окно демо-тура -->
     <div id="demoModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 invisible">
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // закрывать модалки
+        function closeAllModals() {
+            document.querySelectorAll('.modal.active').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+
+        // закрывать модалки на клавишу
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeAllModals();
+            }
+        });
+
+        // бесячее закрывание модалки мискликом out of modalka
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeAllModals();
+                }
+            });
+        });
+
+        // не работает демо тур
+        document.getElementById('closeDemoModal').addEventListener('click', closeAllModals);
+
+        // согласие
+        document.getElementById('acceptPrivacyBtn').addEventListener('click', function() {
+            const isChecked = document.getElementById('acceptPrivacy').checked;
+            if (isChecked) {
+                document.getElementById('acceptTerms').checked = true;
+                document.getElementById('privacyModal').classList.remove('active');
+            } else {
+                alert('Пожалуйста, подтвердите согласие с Политикой конфиденциальности');
+            }
+        });
+
+        // закрывать модалки
+        document.getElementById('closeLoginModal').addEventListener('click', function() {
+            document.getElementById('loginModal').classList.remove('active');
+        });
+
+        document.getElementById('closeRegisterModal').addEventListener('click', function() {
+            document.getElementById('registerModal').classList.remove('active');
+        });
+
+        document.getElementById('closeSuccessModal').addEventListener('click', function() {
+            document.getElementById('successModal').classList.remove('active');
+        });
+
+        document.getElementById('closePrivacyModal').addEventListener('click', function() {
+            document.getElementById('privacyModal').classList.remove('active');
+        });
+
+        document.getElementById('closeFeedbackModal').addEventListener('click', function() {
+            document.getElementById('feedbackModal').classList.remove('active');
+        });
+
+        document.getElementById('closeFeedbackSuccessModal').addEventListener('click', function() {
+            document.getElementById('feedbackSuccessModal').classList.remove('active');
+        });
+
+        document.getElementById('closeDemoModal').addEventListener('click', function() {
+            document.getElementById('demoModal').classList.remove('active');
+        });
+
+        // отмена кнопка
+        document.getElementById('cancelRegister').addEventListener('click', function() {
+            document.getElementById('registerModal').classList.remove('active');
+        });
+
+        // кнопки для рега
+        const registerButtons = [
+            'registerBtn', 'mobileRegisterBtn', 'heroRegisterBtn', 
+            'ctaRegisterBtn', 'switchToRegister', 'mobileLoginBtn',
+            'loginBtn', 'heroLearnMoreBtn', 'ctaDemoBtn'
+        ];
+        
+        registerButtons.forEach(btnId => {
+            document.getElementById(btnId).addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('registerModal').classList.add('active');
+            });
+        });
+
+        // регистрация логик
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const acceptTerms = document.getElementById('acceptTerms').checked;
+            
+            // поля
+            let isValid = true;
+            
+            // имя
+            if (!name || name.length < 2) {
+                document.getElementById('registerName').classList.add('border-red-500');
+                document.getElementById('nameError').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('registerName').classList.remove('border-red-500');
+                document.getElementById('nameError').classList.add('hidden');
+            }
+            
+            // почта
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                document.getElementById('registerEmail').classList.add('border-red-500');
+                document.getElementById('emailError').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('registerEmail').classList.remove('border-red-500');
+                document.getElementById('emailError').classList.add('hidden');
+            }
+            
+            // пароль
+            if (!password || password.length < 6) {
+                document.getElementById('registerPassword').classList.add('border-red-500');
+                document.getElementById('passwordError').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('registerPassword').classList.remove('border-red-500');
+                document.getElementById('passwordError').classList.add('hidden');
+            }
+            
+            // по пароля
+            if (password !== confirmPassword) {
+                document.getElementById('registerConfirmPassword').classList.add('border-red-500');
+                document.getElementById('confirmPasswordError').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('registerConfirmPassword').classList.remove('border-red-500');
+                document.getElementById('confirmPasswordError').classList.add('hidden');
+            }
+            
+            // правила
+            if (!acceptTerms) {
+                document.getElementById('termsError').classList.remove('hidden');
+                isValid = false;
+            } else {
+                document.getElementById('termsError').classList.add('hidden');
+            }
+            
+            // ирл проверка
+            document.getElementById('registerName').addEventListener('input', function() {
+                if (this.value.trim().length >= 2) {
+                    this.classList.remove('border-red-500');
+                    document.getElementById('nameError').classList.add('hidden');
+                }
+            });
+            
+            document.getElementById('registerEmail').addEventListener('input', function() {
+                if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim())) {
+                    this.classList.remove('border-red-500');
+                    document.getElementById('emailError').classList.add('hidden');
+                }
+            });
+            
+            document.getElementById('registerPassword').addEventListener('input', function() {
+                if (this.value.length >= 6) {
+                    this.classList.remove('border-red-500');
+                    document.getElementById('passwordError').classList.add('hidden');
+                }
+            });
+            
+            document.getElementById('registerConfirmPassword').addEventListener('input', function() {
+                if (this.value === document.getElementById('registerPassword').value) {
+                    this.classList.remove('border-red-500');
+                    document.getElementById('confirmPasswordError').classList.add('hidden');
+                }
+            });
+            
+            if (!isValid) return;
+            
+            // пролоджить
+            document.getElementById('registerModal').classList.remove('active');
+            document.getElementById('successModal').classList.add('active');
+            
+            // сохранять рег
+            localStorage.setItem('registered', 'true');
+            localStorage.setItem('userName', name);
+            
+            // доделать
+            document.getElementById('authButtons').classList.add('hidden');
+            document.getElementById('userProfile').classList.remove('hidden');
+            document.getElementById('userName').textContent = name;
+
+            // рай
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 1s ease';
+                document.body.style.opacity = '0';
+            }, 1000);
+            
+            // я забыл зачем
+            registerButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.textContent = 'Войти';
+                    btn.removeEventListener('click', showRegisterModal);
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.getElementById('loginModal').classList.add('active');
+                    });
+                }
+            });
+        });
+
+        // что то для проверки 
+        if (localStorage.getItem('registered') === 'true') {
+            document.getElementById('authButtons').classList.add('hidden');
+            document.getElementById('userProfile').classList.remove('hidden');
+            document.getElementById('userName').textContent = localStorage.getItem('userName');
+            
+            registerButtons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) btn.removeEventListener('click', showRegisterModal);
+            });
+        }
+
+        // (не надо)
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('registered');
+            localStorage.removeItem('userName');
+            document.getElementById('authButtons').classList.remove('hidden');
+            document.getElementById('userProfile').classList.add('hidden');
+        });
+
+        function showRegisterModal(e) {
+            e.preventDefault();
+            document.getElementById('registerModal').classList.add('active');
+        }
+
+        // обработчик рега
+        registerButtons.forEach(btnId => {
+            const btn = document.getElementById(btnId);
+            if (btn) btn.addEventListener('click', showRegisterModal);
+        });
+
+        // КАЛЬКУЛЯТОР
+        const calculateBtn = document.getElementById('calculateBtn');
+        const results = document.getElementById('results');
+        const caloriesChart = document.getElementById('caloriesChart');
+        
+        calculateBtn.addEventListener('click', function() {
+            // данные формы
+            const age = parseFloat(document.getElementById('age').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            
+            // поля проверка
+            if (!age || !height || !weight) {
+                alert('Пожалуйста, заполните все обязательные поля');
+                return;
+            }
+            
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const activity = parseFloat(document.getElementById('activity').value);
+            const goal = parseFloat(document.getElementById('goal').value);
+            
+            // расчет метаболизма по формуле Миффлина-Сан Жеора
+            let bmr;
+            if (gender === 'male') {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else {
+                bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            }
+            
+            // общий расход калорий с учетом активности
+            const maintenanceCalories = Math.round(bmr * activity);
+            const goalCalories = Math.max(maintenanceCalories + goal, 1200);
+            
+            // макронутриенты (30% белки, 40% углеводы, 30% жиры)
+            const protein = Math.round((goalCalories * 0.3) / 4);
+            const carbs = Math.round((goalCalories * 0.4) / 4);
+            const fat = Math.round((goalCalories * 0.3) / 9);
+            
+            // вода (35 мл на 1 кг веса)
+            const water = (weight * 0.035).toFixed(1);
+            
+            // результатес
+            document.getElementById('maintenanceCalories').textContent = maintenanceCalories + ' ккал';
+            document.getElementById('goalCalories').textContent = goalCalories + ' ккал';
+            document.getElementById('protein').textContent = protein + 'г';
+            document.getElementById('carbs').textContent = carbs + 'г';
+            document.getElementById('fat').textContent = fat + 'г';
+            document.getElementById('water').textContent = water + 'л';
+            
+            // показываем результатес
+            results.classList.remove('hidden');
+            
+            // обновляем графикс
+            updateChart(maintenanceCalories, goalCalories);
+            
+            // прокрутка к результатес
+            results.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+        
+        // трудный график
+        function updateChart(maintenance, goal) {
+            if (window.caloriesChartInstance) {
+                window.caloriesChartInstance.destroy();
+            }
+            
+            const ctx = caloriesChart.getContext('2d');
+            window.caloriesChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Поддержание', 'Твоя цель', 'Разница'],
+                    datasets: [{
+                        data: [maintenance, goal, Math.abs(goal - maintenance)],
+                        backgroundColor: [
+                            '#FF6B35',
+                            '#EF233C',
+                            '#F7C59F'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 10,
+                                padding: 20,
+                                font: {
+                                    family: 'Montserrat',
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.raw + ' ккал';
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            });
+        }
+        
+        // анимация при скролле
+        const animatedElements = document.querySelectorAll('.animate-on-scroll');
+        
+        function checkScroll() {
+            animatedElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    element.classList.add('animated');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', checkScroll);
+        checkScroll();
+    });
+    </script>
+
+
+            <!-- тур (без покатушек) -->
+
         <div class="modal-content bg-white rounded-lg shadow-xl max-w-4xl w-full transform translate-y-10">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
