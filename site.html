@@ -343,7 +343,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">Персональные тренировки</h3>
                     <p class="text-gray-600 mb-4">Программы, адаптированные под твой уровень подготовки, цели и доступное оборудование. Тренируйся где угодно и когда угодно.</p>
-                    <button class="text-orange-500 font-medium flex items-center">
+                    <button onclick="document.getElementById('registerModal').classList.add('active')" class="text-orange-500 font-medium flex items-center">
                         Узнать больше <i class="fas fa-arrow-right ml-2"></i>
                     </button>
                 </div>
@@ -354,7 +354,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">Питание и диеты</h3>
                     <p class="text-gray-600 mb-4">Индивидуальные планы питания с учетом твоих предпочтений и целей. Рецепты, трекер калорий и макронутриентов.</p>
-                    <button class="text-orange-500 font-medium flex items-center">
+                    <button onclick="document.getElementById('registerModal').classList.add('active')" class="text-orange-500 font-medium flex items-center">
                         Узнать больше <i class="fas fa-arrow-right ml-2"></i>
                     </button>
                 </div>
@@ -365,7 +365,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">Трекер прогресса</h3>
                     <p class="text-gray-600 mb-4">Отслеживай свои результаты, анализируй статистику и получай рекомендации по улучшению показателей.</p>
-                    <button class="text-orange-500 font-medium flex items-center">
+                   <button onclick="document.getElementById('registerModal').classList.add('active')" class="text-orange-500 font-medium flex items-center">
                         Узнать больше <i class="fas fa-arrow-right ml-2"></i>
                     </button>
                 </div>
@@ -376,7 +376,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">Видео-уроки</h3>
                     <p class="text-gray-600 mb-4">Более 500 профессиональных видео с детальными объяснениями техники выполнения упражнений.</p>
-                    <button class="text-orange-500 font-medium flex items-center">
+                    <button onclick="document.getElementById('registerModal').classList.add('active')" class="text-orange-500 font-medium flex items-center">
                         Узнать больше <i class="fas fa-arrow-right ml-2"></i>
                     </button>
                 </div>
@@ -387,7 +387,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">Здоровье и восстановление</h3>
                     <p class="text-gray-600 mb-4">Программы растяжки, медитации и восстановления после тренировок. Заботься о своем теле комплексно.</p>
-                    <button class="text-orange-500 font-medium flex items-center">
+                   <button onclick="document.getElementById('registerModal').classList.add('active')" class="text-orange-500 font-medium flex items-center">
                         Узнать больше <i class="fas fa-arrow-right ml-2"></i>
                     </button>
                 </div>
@@ -398,7 +398,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">Сообщество</h3>
                     <p class="text-gray-600 mb-4">Общайся с единомышленниками, участвуй в челленджах, находи поддержку и мотивацию.</p>
-                    <button class="text-orange-500 font-medium flex items-center">
+                    <button onclick="document.getElementById('registerModal').classList.add('active')" class="text-orange-500 font-medium flex items-center">
                         Узнать больше <i class="fas fa-arrow-right ml-2"></i>
                     </button>
                 </div>
@@ -433,7 +433,7 @@
                                     <span class="text-sm text-gray-600">500+ тренировок</span>
                                 </div>
                             </div>
-                            <button class="text-orange-500 font-medium text-sm">Читать полностью</button>
+                            <button onclick="document.getElementById('registerModal').classList.add('active')" class="text-orange-500 font-medium text-sm">Читать полностью</button>
                         </div>
                     </div>
                 </div>
@@ -456,7 +456,7 @@
                                     <span class="text-sm text-gray-600">300+ рецептов</span>
                                 </div>
                             </div>
-                            <button class="text-orange-500 font-medium text-sm">Читать полностью</button>
+                            <button onclick="document.getElementById('registerModal').classList.add('active')" class="text-orange-500 font-medium text-sm">Читать полностью</button>
                         </div>
                     </div>
                 </div>
@@ -479,14 +479,14 @@
                                     <span class="text-sm text-gray-600">Здоровье</span>
                                 </div>
                             </div>
-                            <button class="text-orange-500 font-medium text-sm">Читать полностью</button>
+                            <button onclick="document.getElementById('registerModal').classList.add('active')" class="text-orange-500 font-medium text-sm">Читать полностью</button>
                         </div>
                     </div>
                 </div>
             </div>
             
             <div class="mt-12 text-center">
-                <button class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">
+                <button onclick="document.getElementById('registerModal').classList.add('active')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">
                     Больше историй
                 </button>
             </div>
@@ -578,14 +578,13 @@
                             <p class="text-gray-600">Результаты появятся после расчета</p>
                         </div>
                         
-                        <div class="nutrition-wheel mb-8">
-                            <canvas id="caloriesChart" width="250" height="250"></canvas>
-                        </div>
-                        
-                        <div id="results" class="hidden w-full max-w-md">
-                            <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
-                                <h4 class="text-lg font-bold text-gray-900 mb-4 text-center">Рекомендации по питанию</h4>
-                                <div class="space-y-4">
+                         <canvas id="caloriesChart" width="340" height="340"></canvas>
+
+                            <div id="results" class="hidden w-full max-w-md">
+
+                             <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
+                                 <h4 class="text-lg font-bold text-gray-900 mb-4 text-center">Рекомендации по питанию</h4>
+                             <div class="space-y-4">
                                     <div class="flex items-center justify-between">
                                         <span class="text-gray-600">Калории для поддержания:</span>
                                         <span class="text-orange-500 font-bold" id="maintenanceCalories">0 ккал</span>
@@ -594,7 +593,7 @@
                                         <span class="text-gray-600">Калории для цели:</span>
                                         <span class="text-orange-500 font-bold" id="goalCalories">0 ккал</span>
                                     </div>
-                                    <div class="border-t border-gray-200 my-2"></div>
+                                    <div class="border-t border-gray-300 my-2"></div>
                                     <div class="flex items-center justify-between">
                                         <span class="text-gray-600">Белки:</span>
                                         <span class="text-orange-500 font-bold" id="protein">0г</span>
@@ -747,7 +746,7 @@
             </div>
             
             <div class="mt-12 text-center">
-                <button class="border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">
+                <button onclick="document.getElementById('registerModal').classList.add('active')" class="border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white font-bold py-3 px-8 rounded-lg text-lg transition transform hover:scale-105">
                     Оставить отзыв
                 </button>
             </div>
@@ -777,10 +776,10 @@
                     </div>
                     <p class="text-gray-400 mb-4">Твой персональный фитнес-тренер всегда с тобой.</p>
                     <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-youtube"></i></a>
+                        <a href="https://facebook.com/" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://instagram.com/" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-instagram"></i></a>
+                        <a href="https://x.com/" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-twitter"></i></a>
+                        <a href="https://youtube.com/" class="text-gray-400 hover:text-orange-500 transition"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
                 
@@ -809,11 +808,11 @@
                     <ul class="space-y-2">
                         <li class="flex items-center">
                             <i class="fas fa-map-marker-alt text-orange-500 mr-2"></i>
-                            <span class="text-gray-400">Москва, ул. Фитнесная, 15</span>
+                            <span class="text-gray-400">Новосибирск, ул. Красикова 7</span>
                         </li>
                         <li class="flex items-center">
                             <i class="fas fa-phone text-orange-500 mr-2"></i>
-                            <span class="text-gray-400">+7 (123) 456-7890</span>
+                            <span class="text-gray-400">+7 (383) 148-1337</span>
                         </li>
                         <li class="flex items-center">
                             <i class="fas fa-envelope text-orange-500 mr-2"></i>
@@ -824,11 +823,11 @@
             </div>
             
             <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 mb-4 md:mb-0">© 2023 FitMaster. Все права защищены.</p>
+                <p class="text-gray-400 mb-4 md:mb-0">© 2025 FitMaster. Все права защищены.</p>
                 <div class="flex space-x-6">
                     <a href="#" class="text-gray-400 hover:text-orange-500 transition">Правовая информация</a>
                     <a href="#" class="text-gray-400 hover:text-orange-500 transition">Карта сайта</a>
-                    <button id="feedbackBtn" class="text-gray-400 hover:text-orange-500 transition">Обратная связь</button>
+                    <a href="#" class="text-gray-400 hover:text-orange-500 transition">Обратная связь</button>
                 </div>
             </div>
         </div>
